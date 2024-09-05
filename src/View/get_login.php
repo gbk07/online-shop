@@ -4,7 +4,7 @@
             <img src="https://res.cloudinary.com/linuxmachinecloud/image/upload/v1695134236/codepen/login-form/nw9mzwltearfjmfqlujk.png" class="app-logo" alt="logo">
         </header>
 
-        <form class="login" action="/handle_login.php" method="POST">
+        <form class="login" action="/login" method="POST">
             <div class="login-input-group">
                 <div class="login-floating-label-form-group login-floating-label-form-group__dark">
                     <label>Имя пользователя</label>

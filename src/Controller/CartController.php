@@ -3,11 +3,15 @@ require_once './../Model/UserProduct.php';
 require_once './../Model/Product.php';
 class CartController
 {
+    public function getAddProduct()
+    {
+        require_once './../View/get_add_product.php';
+    }
     public function addProduct()
     {
         session_start();
         if (!isset($_SESSION['logged_in_user_id'])) {
-            header('Location:/get_login.php');
+            header('Location:/login');
         }
 
         $errors = $this->validate($_POST);
@@ -62,7 +66,7 @@ class CartController
     {
         session_start();
         if(!isset($_SESSION["logged_in_user_id"])){
-            header("Location: /get_login.php");
+            header("Location: /login");
         }
         $userId = $_SESSION['logged_in_user_id'];
 
@@ -82,4 +86,5 @@ class CartController
         require_once './../View/cart.php';
     }
 }
+
 

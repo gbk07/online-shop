@@ -1,16 +1,16 @@
+<form action="/cart" method="GET">
 <div class="container">
-    <h3>Catalog</h3>
+    <h3>Shopping cart</h3>
     <div class="card-deck">
         <?php foreach ($products as $product): ?>
             <div class="card text-center">
                 <a href="#">
                     <div class="card-header">
-                        Hit!
                     </div>
                     <img class="card-img-top" src="<?php echo $product['product_image'];?>" alt="Card image">
                     <div class="card-body">
                         <p <h2 class="card-title"><?php echo $product['product_name'];?></h2> </p>
-                        <a href="#"><h5 class="card-title"><?php echo $product['product_category'];?> </h5></a>
+                        <a href="#"><h5 class="card-title"><?php echo $product['product_category'];?></h5></a>
                         <div class="card-footer">
                             <?php echo $product['price'] . 'руб';?>
                         </div>
