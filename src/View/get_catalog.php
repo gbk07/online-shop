@@ -1,3 +1,4 @@
+<form action="/catalog" method="GET">
 <div class="container">
     <h3>Catalog</h3>
     <div class="card-deck">
@@ -14,7 +15,6 @@
                         <div class="card-footer">
                             <?php echo $product['price'] . 'руб';?>
                         </div>
-                        <?php echo 'количество: '. $product['amount'] . 'шт';?>
                     </div>
                 </a>
             </div>

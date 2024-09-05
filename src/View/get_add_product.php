@@ -1,4 +1,4 @@
-<form action="/handle_add_product.php" method="POST">
+<form action="/product" method="POST">
     <div class="container">
         <h1> Добавить товар в корзину</h1>
         <hr>
