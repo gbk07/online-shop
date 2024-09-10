@@ -29,7 +29,7 @@ class CartController
             }
         }
 
-        require_once './../View/get_add_product.php';
+        header ("Location:/catalog");
     }
 
     private function validate(array $data)

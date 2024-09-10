@@ -1,4 +1,4 @@
-<form action="/cart" method="GET">
+
 <div class="container">
     <h3>Shopping cart</h3>
     <div class="card-deck">
@@ -19,6 +19,8 @@
                 </a>
             </div>
         <?php endforeach; ?>
+        <br><br>
+        <a href="/order"> Оформить заказ </a>
     </div>
 </div>
 <style>
