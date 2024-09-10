@@ -1,12 +1,11 @@
-<form action="/catalog" method="GET">
 <div class="container">
     <h3>Catalog</h3>
     <div class="card-deck">
         <?php foreach ($products as $product): ?>
-            <div class="card text-center">
+        <form action="/addProduct" method="POST">
+        <div class="card text-center">
                 <a href="#">
                     <div class="card-header">
-                        Hit!
                     </div>
                     <img class="card-img-top" src="<?php echo $product['product_image'];?>" alt="Card image">
                     <div class="card-body">
@@ -18,7 +17,12 @@
                     </div>
                 </a>
             </div>
+            <input type="hidden" id="product_id" name="product_id" value="<?php echo $product['id'];?>" required>
+            <input type="text" id="amount" name="amount" required>
+            <button type="submit" class="registerbtn">Добавить в корзину</button>
+        </form>
         <?php endforeach; ?>
+        <a href="/cart"> перейти в корзину </a>
     </div>
 </div>
 <style>

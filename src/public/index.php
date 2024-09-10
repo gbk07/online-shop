@@ -2,6 +2,7 @@
 require_once './../Controller/UserController.php';
 require_once './../Controller/ProductController.php';
 require_once './../Controller/CartController.php';
+require_once './../Controller/OrderController.php';
 
 $requestUri = $_SERVER['REQUEST_URI'];
 $requestMethod = $_SERVER['REQUEST_METHOD'];
@@ -9,7 +10,6 @@ $requestMethod = $_SERVER['REQUEST_METHOD'];
 
 if($requestUri === '/login') {
     if($requestMethod === 'GET') {
-        require_once './../Controller/UserController.php';
         $userController = new UserController();
         $userController->getLogin();
     } elseif($requestMethod === 'POST') {
@@ -20,7 +20,6 @@ if($requestUri === '/login') {
     }
 } elseif ($requestUri === '/registrate'){
     if($requestMethod === 'GET') {
-
         $userController = new UserController();
         $userController->getRegistrate();
     } elseif($requestMethod === 'POST') {
@@ -30,28 +29,44 @@ if($requestUri === '/login') {
         echo 'Invalid request method';
     }
 } elseif ($requestUri === '/catalog') {
-    if($requestMethod === 'GET') {
+    if ($requestMethod === 'GET') {
         $productController = new ProductController();
         $productController->Catalog();
-    }else{
+    } else {
         echo 'Invalid request method';
     }
-} elseif ($requestUri === '/product'){
-    if($requestMethod === 'GET') {
-        $productController = new CartController();
-        $productController->getAddProduct();
-    }elseif ($requestMethod === 'POST') {
+}
+  elseif ($requestUri === '/addProduct'){
+      if ($requestMethod === 'POST') {
         $productController = new CartController();
         $productController->addProduct();
     }else {
         echo 'Invalid request method';
     }
-}
-  elseif ($requestUri === '/cart'){
-    if($requestMethod === 'GET') {
+} elseif ($requestUri === '/cart') {
+    if ($requestMethod === 'GET') {
         $cartController = new CartController();
         $cartController->getCart();
-    } else{
+    } else {
+        echo 'Invalid request method';
+    }
+} elseif ($requestUri === '/order') {
+    $orderController = new OrderController();
+    if ($requestMethod === 'GET') {
+        $orderController = new OrderController();
+        $orderController->orderPlacement();
+    } elseif ($requestMethod === 'POST') {
+        $orderController = new OrderController();
+        $orderController->placeOrder();
+    } else {
+        echo 'Invalid request method';
+    }
+
+} elseif ($requestUri === '/orderPlaced') {
+    if ($requestMethod === 'GET') {
+        $orderController = new OrderController();
+        $orderController->orderPlaced();
+    } else {
         echo 'Invalid request method';
     }
 } else{
