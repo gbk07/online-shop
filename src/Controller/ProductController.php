@@ -1,5 +1,6 @@
 <?php
-require_once './../Model/Product.php';
+namespace Controller;
+use Model\Product;
 class ProductController
 {
     public function catalog()
@@ -11,6 +12,7 @@ class ProductController
         $productModel = new Product();
 
         $products = $productModel->getAll();
+
 
         require_once './../View/get_catalog.php';
 
