@@ -1,8 +1,10 @@
 <?php
-require_once './../Model/Order.php';
-require_once './../Model/UserProduct.php';
+namespace Controller;
+use Model\Order;
+use Model\UserProduct;
+use Model\Model;
 
-class OrderController
+class OrderController extends Model
 {
     public function orderPlacement()
     {
@@ -30,7 +32,6 @@ class OrderController
             $number = $_POST['number'];
             $address = $_POST['address'];
 
-            $pdo = new PDO('pgsql:host=db;port=5432;dbname=dbname', 'dbuser', 'dbpwd');
             $orderModel = new Order();
             $orderId = $orderModel->createOrder($name, $email, $number, $address);
 
@@ -38,12 +39,12 @@ class OrderController
             $result = $orderModel->getAllByUserId($userId);
 
             foreach ($result as $userProduct) {
-                $stmt = $pdo->prepare("INSERT INTO orders_products (order_id, product_id, amount) VALUES (:orderId, :productId, :amount)");
+                $stmt = $this->pdo->prepare("INSERT INTO orders_products (order_id, product_id, amount) VALUES (:orderId, :productId, :amount)");
                 $stmt->execute(['orderId' => $orderId, 'productId' => $userProduct['product_id'], 'amount' => $userProduct['amount'],
                 ]);
             }
 
-            $stmt = $pdo->prepare("DELETE FROM user_products WHERE user_id = :userId");
+            $stmt = $this->pdo->prepare("DELETE FROM user_products WHERE user_id = :userId");
             $stmt->execute(['userId' => $userId]);
 
             header('Location: /orderPlaced');

@@ -17,10 +17,17 @@
                     </div>
                 </a>
             </div>
+            <form action="/addProduct" method="POST">
             <input type="hidden" id="product_id" name="product_id" value="<?php echo $product['id'];?>" required>
-            <input type="text" id="amount" name="amount" required>
-            <button type="submit" class="registerbtn">Добавить в корзину</button>
+            <input type="number" id="amount" name="amount" required>
+            <button type="submit" class="registerbtn">+</button>
         </form>
+            <form action="/deleteProduct" method="POST">
+                <input type="hidden" id="product_id" name="product_id" value="<?php echo $product['id'];?>" required>
+                <input type="number" id="amount" name="amount" required>
+                <button type="submit" class="registerbtn">-</button>
+            </form>
+
         <?php endforeach; ?>
         <a href="/cart"> перейти в корзину </a>
     </div>

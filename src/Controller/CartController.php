@@ -1,12 +1,11 @@
 <?php
-require_once './../Model/UserProduct.php';
-require_once './../Model/Product.php';
+namespace Controller;
+use Model\UserProduct;
+use Model\Product;
+
 class CartController
 {
-    public function getAddProduct()
-    {
-        require_once './../View/get_add_product.php';
-    }
+
     public function addProduct()
     {
         session_start();
@@ -28,6 +27,25 @@ class CartController
                 $userProductModel->updateAmount($userId, $productId, $amount);
             }
         }
+
+        header ("Location:/catalog");
+    }
+    public function deleteProduct()
+    {
+        session_start();
+        if (!isset($_SESSION['logged_in_user_id'])) {
+            header('Location:/login');
+        }
+
+        $errors = $this->validate($_POST);
+        $userId = $_SESSION['logged_in_user_id'];
+
+        if (empty($errors)) {
+            $productId = $_POST['product_id'];
+            $amount = $_POST['amount'];
+            $userProductModel = new UserProduct();
+            $userProductModel->deleteProduct($userId, $productId, $amount);
+            }
 
         header ("Location:/catalog");
     }
@@ -62,6 +80,8 @@ class CartController
 
         return $errors;
     }
+
+
     public function getCart()
     {
         session_start();
