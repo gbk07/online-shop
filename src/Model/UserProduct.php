@@ -2,6 +2,12 @@
 namespace Model;
 class UserProduct extends Model
 {
+    private int $id;
+    private int $userId;
+    private int $product;
+    private int $amount;
+
+
 
 
     public function getProductId(int $productId): array|false
@@ -53,11 +59,41 @@ class UserProduct extends Model
         }
     }
 
-    public function getAllByUserId(int $userId): array
+    public function getAllByUserId(int $userId): ?array
     {
         $stmt = $this->pdo->prepare("SELECT * FROM user_products WHERE user_id = :user_id");
         $stmt->execute(['user_id' => $userId]);
         $result = $stmt->fetchAll();
-        return $result;
+        if ($result === false){
+            return [];
+        }
+        $productsObj = [];
+        foreach ($result as $product){
+            $obj = new self();
+            $obj->id = $product['id'];
+            $obj->userId = $product['user_id'];
+            $obj->product= $product['product_id'];
+            $obj->amount = $product['amount'];
+            $productsObj[] = $obj;
+        }
+        return $productsObj;
+
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+    public function getUserId(): int
+    {
+        return $this->userId;
+    }
+    public function getAmount(): int
+    {
+        return $this->amount;
+    }
+    public function getProduct(): int
+    {
+        return $this->product;
     }
 }

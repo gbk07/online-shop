@@ -2,23 +2,25 @@
 namespace Controller;
 use Model\UserProduct;
 use Model\Product;
+use Request\AddProductRequest;
+use Request\DeleteProductRequest;
 
 class CartController
 {
 
-    public function addProduct()
+    public function addProduct(AddProductRequest $request)
     {
         session_start();
         if (!isset($_SESSION['logged_in_user_id'])) {
             header('Location:/login');
         }
 
-        $errors = $this->validate($_POST);
+        $errors = $request->validate();
         $userId = $_SESSION['logged_in_user_id'];
 
         if (empty($errors)) {
-            $productId = $_POST['product_id'];
-            $amount = $_POST['amount'];
+            $productId = $request->getProductId();
+            $amount = $request->getAmount();
             $userProductModel = new UserProduct();
             $result = $userProductModel->exists($productId, $userId);
             if (empty($result)) {
@@ -30,81 +32,53 @@ class CartController
 
         header ("Location:/catalog");
     }
-    public function deleteProduct()
+    public function deleteProduct(DeleteProductRequest $request)
     {
         session_start();
         if (!isset($_SESSION['logged_in_user_id'])) {
             header('Location:/login');
         }
 
-        $errors = $this->validate($_POST);
+        $errors = $request->validate();
         $userId = $_SESSION['logged_in_user_id'];
 
         if (empty($errors)) {
-            $productId = $_POST['product_id'];
-            $amount = $_POST['amount'];
+            $productId = $request->getProductId();
+            $amount = $request->getAmount();
             $userProductModel = new UserProduct();
             $userProductModel->deleteProduct($userId, $productId, $amount);
             }
 
         header ("Location:/catalog");
     }
-
-    private function validate(array $data)
-    {
-        $errors = [];
-
-        if (isset($data['product_id'])) {
-            $productId = $data['product_id'];
-            if (empty($productId)) {
-                $errors['product_id'] = 'id товара не может быть пустым';
-            } else {
-                $userProductModel = new UserProduct();
-                $result = $userProductModel->getProductId($data['product_id']);
-                if (empty($result)) {
-                    $errors['product_id'] = 'ProductId не существует';
-                }
-            }
-        } else {
-            $errors['product_id'] = 'product_id не указан';
-        }
-
-        if (isset($data['amount'])) {
-            $amount = $data['amount'];
-            if (empty($amount) || $amount <= 0) {
-                $errors['amount'] = 'количество товара должно быть больше 0';
-            }
-        } else {
-            $errors['amount'] = 'amount не указан';
-        }
-
-        return $errors;
-    }
-
-
     public function getCart()
     {
         session_start();
-        if(!isset($_SESSION["logged_in_user_id"])){
+        if (!isset($_SESSION["logged_in_user_id"])) {
             header("Location: /login");
         }
-        $userId = $_SESSION['logged_in_user_id'];
 
+        $userId = $_SESSION['logged_in_user_id'];
         $UserProductModel = new UserProduct();
         $userProducts = $UserProductModel->getAllByUserId($userId);
 
         $productModel = new Product();
         $products = [];
+
         foreach ($userProducts as $userProduct) {
-            $product = $productModel->getOneByProductId($userProduct['product_id']);
+            $productId = $userProduct->getProduct();
+            $amount = $userProduct->getAmount();
+            $product = $productModel->getOneByProductId($productId);
+
             if ($product) {
-                $product['amount'] = $userProduct['amount'];
+                $product->setAmount($amount);
                 $products[] = $product;
             }
         }
 
         require_once './../View/cart.php';
     }
+
 }
 
 
