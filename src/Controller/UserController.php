@@ -1,59 +1,54 @@
 <?php
 namespace Controller;
+
 use Model\User;
 use PDO;
-
+use Request\LoginRequest;
+use Request\RegistrateRequest;
 
 class UserController
 {
-    public function registrate()
+    public function registrate (RegistrateRequest $request)
     {
-        $errors = $this->validate($_POST);
+        $errors = $request->validate();
         if (empty($errors)) {
 
-            $name = $_POST['name'];
-            $email = $_POST['email'];
-            $psw = $_POST['psw'];
-            $pswRep = $_POST['psw-repeat'];
+            $name = $request->getName();
+            $email = $request->getEmail();
+            $psw = $request->getPsw();
+            $pswRep = $request->getPswRep();
 
             $pswHash = password_hash($psw, PASSWORD_DEFAULT);
 
-            $pdo = new PDO('pgsql:host=db;port=5432;dbname=dbname', 'dbuser', 'dbpwd');
-
             $userModel = new User();
             $userModel->create($name, $email, $pswHash);
-
-            $userModel->getOneByEmail($email);
 
             header('Location: /login');
         }
         require_once './../View/get_registration.php';
     }
+
     public function getRegistrate()
     {
         require_once './../View/get_registration.php';
     }
 
-
-    public function login()
+    public function login(LoginRequest $request)
     {
-        $errors = $this->validateLogin($_POST);
-        if(empty($errors)) {
-            $username = $_POST["username"];
-            $password = $_POST["password"];
-
-            $pdo = new PDO('pgsql:host=db;port=5432;dbname=dbname', 'dbuser', 'dbpwd');
+        $errors = $request->validateLogin();
+        if (empty($errors)) {
+            $username = $request->getUsername();
+            $password = $request->getPassword();
 
             $userModel = new User();
             $result = $userModel->getOneByEmail($username);
 
-
-            if (empty($result)) {
+            if ($result === null) {
                 $errors['username'] = 'email or password is incorrect';
             } else {
-                if (password_verify($password, $result["password"])) {
+                if (password_verify($password, $result->getPassword())) {
                     session_start();
-                    $_SESSION["logged_in_user_id"] = $result["id"];
+                    $_SESSION["logged_in_user_id"] = $result->getId();
                     header("Location: /catalog");
                 } else {
                     $errors['password'] = 'email or password is incorrect';
@@ -62,87 +57,9 @@ class UserController
             require_once './../View/get_login.php';
         }
     }
+
     public function getLogin()
     {
         require_once './../View/get_login.php';
-
     }
-    private function validate(array $data) {
-        $errors = [];
-        if (isset($data['name'])) {
-            $name = $data['name'];
-            if (empty($name)) {
-                $errors['name'] = 'Заполните поле Name';
-            } elseif (strlen($name) < 2) {
-                $errors['name'] = ' должен иметь от 2 символов';
-            } elseif (preg_match("/[0-9]/", $name)) {
-                $errors['name'] = ' не должен содержать цифр';
-            }
-        } else{
-            $errors['name'] = 'name не указан';
-        }
-        if (isset($data['email'])) {
-            $email = $data['email'];
-            if (empty($email)) {
-                $errors['email'] = ' не указан';
-            } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                $errors['email'] = ' адрес указан неверно';
-            } else {
-                $userModel = new User();
-                $result = $userModel->getOneByEmail($data['email']);
-                if (!empty($result)) {
-                    $errors['email'] = ' ранее зарегистрирован в базе данных';
-                }
-            }
-        } else{
-            $errors['email'] = 'email не указан';
-        }
-
-        if (isset($data['psw'])) {
-            $psw = $data['psw'];
-            if (empty($psw)) {
-                $errors['psw'] = ' не указан';
-            } elseif (strlen($psw) < 6) {
-                $errors['psw'] = ' должен иметь от 6 символов';
-            }
-        } else{
-            $errors['psw'] = 'password не указан';
-
-        }
-
-        if (isset($data['psw-repeat'])) {
-            $pswRep = $data['psw-repeat'];
-            if (empty($pswRep)) {
-                $errors['psw-repeat'] = ' не указан';
-            } elseif ($psw !== $pswRep) {
-                $errors['psw-repeat'] = 'Пароли не совпадают';
-            }
-        } else{
-            $errors['psw-repeat'] = 'pswRep не указан';
-        }
-        return $errors;
-    }
-    private function validateLogin(array $data) {
-        $errors = [];
-        if (isset($data['username'])) {
-            $username = $data['username'];
-            if (empty($username)) {
-                $errors['username'] = 'Заполните поле username';
-            }
-        } else{
-            $errors['username'] = 'name не указан';
-        }
-
-        if (isset($data['password'])) {
-            $password = $data['password'];
-            if (empty($password)) {
-                $errors['password'] = 'заполните поле password';
-            }
-        } else{
-            $errors['password'] = 'password не указан';
-
-        }
-        return $errors;
-    }
-
 }

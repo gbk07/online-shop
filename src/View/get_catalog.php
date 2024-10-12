@@ -1,77 +1,156 @@
 <div class="container">
-    <h3>Catalog</h3>
+    <h3>Каталог</h3>
     <div class="card-deck">
         <?php foreach ($products as $product): ?>
-        <form action="/addProduct" method="POST">
-        <div class="card text-center">
+            <div class="card text-center">
                 <a href="#">
-                    <div class="card-header">
-                    </div>
-                    <img class="card-img-top" src="<?php echo $product['product_image'];?>" alt="Card image">
+                    <img class="card-img-top" src="<?php echo $product->getImage(); ?>" alt="Card image">
                     <div class="card-body">
-                        <p class="card-text text-muted"><?php echo $product['product_category'];?></p>
-                        <a href="#"><h5 class="card-title"><?php echo $product['product_name'];?></h5></a>
+                        <p class="card-text text-muted"><?php echo $product->getCategory(); ?></p>
+                        <h5 class="card-title"><?php echo $product->getName(); ?></h5>
                         <div class="card-footer">
-                            <?php echo $product['price'] . 'руб';?>
+                            <span class="price"><?php echo $product->getPrice() . ' руб'; ?></span>
                         </div>
                     </div>
                 </a>
+                <form action="/addProduct" method="POST" class="product-form">
+                    <input type="hidden" name="product_id" value="<?php echo $product->getId(); ?>" required>
+                    <div class="quantity-container">
+                        <input type="number" name="amount" min="1" value="1" required>
+                        <button type="submit" class="btn add-btn">Добавить</button>
+                    </div>
+                </form>
+                <form action="/deleteProduct" method="POST" class="product-form">
+                    <input type="hidden" name="product_id" value="<?php echo $product->getId(); ?>" required>
+                    <div class="quantity-container">
+                        <input type="number" name="amount" min="1" value="1" required>
+                        <button type="submit" class="btn remove-btn">Убрать</button>
+                    </div>
+                </form>
             </div>
-            <form action="/addProduct" method="POST">
-            <input type="hidden" id="product_id" name="product_id" value="<?php echo $product['id'];?>" required>
-            <input type="number" id="amount" name="amount" required>
-            <button type="submit" class="registerbtn">+</button>
-        </form>
-            <form action="/deleteProduct" method="POST">
-                <input type="hidden" id="product_id" name="product_id" value="<?php echo $product['id'];?>" required>
-                <input type="number" id="amount" name="amount" required>
-                <button type="submit" class="registerbtn">-</button>
-            </form>
-
         <?php endforeach; ?>
-        <a href="/cart"> перейти в корзину </a>
     </div>
+    <a href="/cart" class="cart-link">Перейти в корзину</a>
 </div>
+
 <style>
     body {
-        font-style: sans-serif;
+        font-family: 'Arial', sans-serif;
+        background-color: #f2f2f2;
+        margin: 0;
+        padding: 20px;
     }
 
-    a {
-        text-decoration: none;
-    }
-
-    a:hover {
-        text-decoration: none;
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
     }
 
     h3 {
-        line-height: 3em;
+        text-align: center;
+        margin-bottom: 40px;
+        color: #333;
+    }
+
+    .card-deck {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
     }
 
     .card {
-        max-width: 16rem;
+        width: 100%;
+        max-width: 300px;
+        margin: 10px;
+        border: none;
+        border-radius: 10px;
+        overflow: hidden;
+        background-color: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s;
     }
 
     .card:hover {
-        box-shadow: 1px 2px 10px lightgray;
-        transition: 0.2s;
+        transform: translateY(-5px);
     }
 
-    .card-header {
-        font-size: 13px;
-        color: gray;
-        background-color: white;
+    .card-img-top {
+        height: 200px;
+        object-fit: cover;
     }
 
-    .text-muted {
-        font-size: 11px;
+    .card-body {
+        padding: 15px;
     }
 
-    .card-footer{
+    .card-text {
+        font-size: 12px;
+        color: #777;
+        margin: 5px 0;
+    }
+
+    .card-title {
+        font-size: 16px;
+        margin: 10px 0;
+        color: #333;
+    }
+
+    .card-footer {
         font-weight: bold;
         font-size: 18px;
-        background-color: white;
+        color: #28a745; /* Зеленый цвет для цены */
+    }
+
+    .quantity-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 10px;
+    }
+
+    input[type="number"] {
+        width: 60px;
+        padding: 5px;
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+        outline: none;
+        text-align: center;
+        margin-right: 10px;
+    }
+
+    .btn {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.3s;
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    .btn:hover {
+        background-color: #0056b3;
+        transform: scale(1.05);
+    }
+
+    .btn:active {
+        transform: scale(0.95);
+    }
+
+    .cart-link {
+        display: block;
+        text-align: center;
+        margin-top: 20px;
+        font-weight: bold;
+        color: #007bff;
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+
+    .cart-link:hover {
+        color: #0056b3;
     }
 </style>
-

@@ -3,6 +3,7 @@ namespace Controller;
 use Model\Order;
 use Model\UserProduct;
 use Model\Model;
+use Request\OrderRequest;
 
 class OrderController extends Model
 {
@@ -16,7 +17,7 @@ class OrderController extends Model
         require_once './../View/orderPlaced.php';
     }
 
-    public function placeOrder()
+    public function placeOrder(OrderRequest $request)
     {
         session_start();
         if (!isset($_SESSION['logged_in_user_id'])) {
@@ -24,13 +25,13 @@ class OrderController extends Model
         }
 
         $userId = $_SESSION['logged_in_user_id'];
-        $errors = $this->validateOrder($_POST);
+        $errors = $request->validateOrder();
 
         if (empty($errors)) {
-            $name = $_POST['name'];
-            $email = $_POST['email'];
-            $number = $_POST['number'];
-            $address = $_POST['address'];
+            $name = $request->getName();
+            $email = $request->getEmail();
+            $number = $request->getNumber();
+            $address = $request->getAddress();
 
             $orderModel = new Order();
             $orderId = $orderModel->createOrder($name, $email, $number, $address);
@@ -40,7 +41,7 @@ class OrderController extends Model
 
             foreach ($result as $userProduct) {
                 $stmt = $this->pdo->prepare("INSERT INTO orders_products (order_id, product_id, amount) VALUES (:orderId, :productId, :amount)");
-                $stmt->execute(['orderId' => $orderId, 'productId' => $userProduct['product_id'], 'amount' => $userProduct['amount'],
+                $stmt->execute(['orderId' => $orderId, 'productId' => $userProduct->getProduct() , 'amount' => $userProduct->getAmount(),
                 ]);
             }
 
@@ -50,54 +51,5 @@ class OrderController extends Model
             header('Location: /orderPlaced');
         }
         require_once './../View/orderPlacement.php';
-    }
-
-    private function validateOrder(array $data)
-    {
-        $errors = [];
-        if (isset($data['name'])) {
-            $name = $data['name'];
-            if (empty($name)) {
-                $errors['name'] = 'Заполните поле Name';
-            } elseif (strlen($name) < 2) {
-                $errors['name'] = ' должен иметь от 2 символов';
-            } elseif (preg_match("/[0-9]/", $name)) {
-                $errors['name'] = ' не должен содержать цифр';
-            }
-        } else {
-            $errors['name'] = 'name не указан';
-        }
-        if (isset($data['email'])) {
-            $email = $data['email'];
-            if (empty($email)) {
-                $errors['email'] = ' не указан';
-            } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                $errors['email'] = ' адрес указан неверно';
-            }
-        } else {
-            $errors['email'] = 'email не указан';
-        }
-
-        if (isset($data['number'])) {
-            $number = $data['number'];
-            if (empty($number)) {
-                $errors['number'] = ' не указан';
-            } elseif (strlen($number) < 11) {
-                $errors['number'] = ' должен иметь от 11 символов';
-            }
-        } else {
-            $errors['number'] = 'number не указан';
-
-        }
-
-        if (isset($data['address'])) {
-            $address = $data['address'];
-            if (empty($address)) {
-                $errors['address'] = ' не указан';
-            }
-        } else {
-            $errors['address'] = 'address не указан';
-        }
-        return $errors;
     }
 }

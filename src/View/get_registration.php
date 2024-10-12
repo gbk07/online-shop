@@ -1,99 +1,157 @@
-    <form action="/registrate" method="POST">
-        <div class="container">
-            <h1>Register</h1>
-            <p>Please fill in this form to create an account.</p>
+<main class="main">
+    <div class="app">
+        <header class="app-header">
+            <h1 class="app-title">Создать аккаунт</h1>
+            <p class="app-subtitle">Пожалуйста, заполните эту форму для создания учетной записи.</p>
+        </header>
+
+        <form action="/registrate" method="POST" class="registration-form">
+            <div class="form-group">
+                <label for="name">Имя</label>
+                <input type="text" name="name" id="name" placeholder="Введите имя" required>
+                <span class="error-message"><?php if (isset($errors['name'])) { echo $errors['name']; } ?></span>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Электронная почта</label>
+                <input type="text" name="email" id="email" placeholder="Введите электронную почту" required>
+                <span class="error-message"><?php if (isset($errors['email'])) { echo $errors['email']; } ?></span>
+            </div>
+
+            <div class="form-group">
+                <label for="psw">Пароль</label>
+                <input type="password" name="psw" id="psw" placeholder="Введите пароль" required>
+                <span class="error-message"><?php if (isset($errors['psw'])) { echo $errors['psw']; } ?></span>
+            </div>
+
+            <div class="form-group">
+                <label for="psw-repeat">Повторите пароль</label>
+                <input type="password" name="psw-repeat" id="psw-repeat" placeholder="Повторите пароль" required>
+                <span class="error-message"><?php if (isset($errors['psw-repeat'])) { echo $errors['psw-repeat']; } ?></span>
+            </div>
+
             <hr>
 
-            <label for="name"><b>Name</b></label>
-            <label style="color: red"><?php if(isset($errors['name'])){
-                echo $errors['name'];}?> </label>
+            <button type="submit" class="btn">Зарегистрироваться</button>
+        </form>
 
-            <input type="text" placeholder="Enter name" name="name" id="name" required>
-
-            <label for="email"><b>Email</b></label>
-
-            <label style="color: red"><?php if(isset($errors['email'])){
-                    echo $errors['email'];}?> </label>
-
-            <input type="text" placeholder="Enter Email" name="email" id="email" required>
-
-            <label for="password"><b>Password</b></label>
-
-            <label style="color: red"><?php if(isset($errors['psw'])){
-                    echo $errors['psw'];}?> </label>
-
-            <input type="password" placeholder="Enter Password" name="psw" id="psw" required>
-
-            <label for="psw-repeat"><b>Repeat Password</b></label>
-            <label style="color: red"><?php if(isset($errors['psw-repeat'])){
-                    echo $errors['psw-repeat'];}?> </label>
-
-            <input type="password" placeholder="Repeat Password" name="psw-repeat" id="psw-repeat" required>
-            <hr>
-
-            <p>By creating an account you agree to our <a href="#">Terms & Privacy</a>.</p>
-            <button type="submit" class="registerbtn">Register</button>
+        <div class="signin">
+            <p>Уже есть аккаунт? <a href="/login">Войдите</a>.</p>
         </div>
+    </div>
+</main>
 
-        <div class="container signin">
-            <p>Already have an account? <a href="#">Sign in</a>.</p>
-        </div>
-    </form>
+<style>
+    body {
+        background-color: #f8f9fa;
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh; /* Высота на всю страницу */
+        padding: 20px; /* Отступы по краям */
+    }
 
+    .app {
+        background-color: #ffffff;
+        padding: 40px;
+        border-radius: 8px;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px;
+        text-align: center;
+        margin-top: 30px; /* Добавлен верхний отступ для опускания формы */
+    }
 
-    <style>
-        * {box-sizing: border-box}
+    .app-header {
+        margin-bottom: 30px; /* Уменьшен отступ снизу */
+    }
 
-        /* Add padding to containers */
-        .container {
-            padding: 16px;
-        }
+    .app-title {
+        font-size: 26px; /* Уменьшен размер шрифта */
+        color: #333;
+        margin: 0;
+    }
 
-        /* Full-width input fields */
-        input[type=text], input[type=password] {
-            width: 100%;
-            padding: 15px;
-            margin: 5px 0 22px 0;
-            display: inline-block;
-            border: none;
-            background: #f1f1f1;
-        }
+    .app-subtitle {
+        color: #666;
+        margin: 5px 0 25px; /* Уменьшен отступ снизу */
+    }
 
-        input[type=text]:focus, input[type=password]:focus {
-            background-color: #ddd;
-            outline: none;
-        }
+    .form-group {
+        margin-bottom: 20px;
+        text-align: left;
+    }
 
-        /* Overwrite default styles of hr */
-        hr {
-            border: 1px solid #f1f1f1;
-            margin-bottom: 25px;
-        }
+    label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
 
-        /* Set a style for the submit/register button */
-        .registerbtn {
-            background-color: #04AA6D;
-            color: white;
-            padding: 16px 20px;
-            margin: 8px 0;
-            border: none;
-            cursor: pointer;
-            width: 100%;
-            opacity: 0.9;
-        }
+    input[type="text"], input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+        outline: none;
+        transition: border-color 0.3s;
+        background-color: #f1f1f1;
+    }
 
-        .registerbtn:hover {
-            opacity:1;
-        }
+    input:focus {
+        border-color: #007bff;
+        background-color: #ffffff;
+    }
 
-        /* Add a blue text color to links */
-        a {
-            color: dodgerblue;
-        }
+    .error-message {
+        color: red;
+        font-size: 12px;
+        margin-top: 5px;
+    }
 
-        /* Set a grey background color and center the text of the "sign in" section */
-        .signin {
-            background-color: #f1f1f1;
-            text-align: center;
-        }
-    </style>
+    .terms {
+        margin: 15px 0;
+        font-size: 14px;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 12px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .btn:hover {
+        background-color: #0056b3;
+    }
+
+    .signin {
+        margin-top: 15px;
+        font-size: 14px;
+        background-color: #f1f1f1;
+        padding: 10px;
+        border-radius: 5px;
+    }
+
+    .signin a {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    .signin a:hover {
+        text-decoration: underline;
+    }
+
+    hr {
+        border: 1px solid #f1f1f1;
+        margin: 25px 0;
+    }
+</style>
