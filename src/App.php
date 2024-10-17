@@ -1,5 +1,5 @@
 <?php
-
+use Service\LoggerService;
 class App
 {
     private array $routes = [
@@ -53,18 +53,18 @@ class App
         ],
         '/order' => [
             'GET' => [
-                'class' => Controller\OrderController::class,
+                'class' => \Controller\OrderController::class,
                 'method' => 'orderPlacement',
             ],
             'POST' => [
-                'class' => Controller\OrderController::class,
+                'class' => \Controller\OrderController::class,
                 'method' => 'placeOrder',
                 'request' => \Request\OrderRequest::class,
             ],
         ],
         '/orderPlaced' => [
             'GET' => [
-                'class' => Controller\OrderController::class,
+                'class' => \Controller\OrderController::class,
                 'method' => 'orderPlaced',
             ],
         ],
@@ -89,8 +89,14 @@ class App
                     $requestClass = $route[$requestMethod]['request'];
 
                     $request = new $requestClass($requestMethod, $requestUri, $requestData);
-
-                    $controller->$methodName($request);
+                    try{
+                        $controller->$methodName($request);
+                    } catch (Throwable $exception) {
+                        $logger = new LoggerService();
+                        $logger->error($exception);
+                        http_response_code(500);
+                        require_once 'View/500.php';
+                    }
                 } else {
                     $controller->$methodName();
                 }

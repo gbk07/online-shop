@@ -1,0 +1,108 @@
+message: Class "mysql_xdevapi\Exception" not found
+file: /var/www/html/src/Controller/UserController.php
+line: 39
+code: 0
+dateTime:2024/10/14 14:42:42
+
+message: Class "Controller\Exception" not found
+file: /var/www/html/src/Controller/OrderController.php
+line: 48
+code: 0
+dateTime:2024/10/14 14:49:16
+
+message: Call to a member function beginTransaction() on null
+file: /var/www/html/src/Controller/OrderController.php
+line: 43
+code: 0
+dateTime:2024/10/15 13:19:49
+
+message: Call to a member function beginTransaction() on null
+file: /var/www/html/src/Controller/OrderController.php
+line: 43
+code: 0
+dateTime:2024/10/15 13:20:27
+
+message: Call to a member function beginTransaction() on null
+file: /var/www/html/src/Controller/OrderController.php
+line: 43
+code: 0
+dateTime:2024/10/15 13:20:30
+
+message: There is no active transaction
+file: /var/www/html/src/Model/Model.php
+line: 28
+code: 0
+dateTime:2024/10/15 13:32:21
+
+message: There is no active transaction
+file: /var/www/html/src/Model/Model.php
+line: 28
+code: 0
+dateTime:2024/10/15 13:32:48
+
+message: There is no active transaction
+file: /var/www/html/src/Model/Model.php
+line: 28
+code: 0
+dateTime:2024/10/15 13:34:13
+
+message: There is no active transaction
+file: /var/www/html/src/Model/Model.php
+line: 28
+code: 0
+dateTime:2024/10/15 13:35:39
+
+message: There is no active transaction
+file: /var/www/html/src/Model/Model.php
+line: 28
+code: 0
+dateTime:2024/10/15 13:36:01
+
+message: There is no active transaction
+file: /var/www/html/src/Model/Model.php
+line: 28
+code: 0
+dateTime:2024/10/15 14:31:32
+
+message: There is no active transaction
+file: /var/www/html/src/Model/Model.php
+line: 28
+code: 0
+dateTime:2024/10/15 14:33:19
+
+message: 
+file: /var/www/html/src/Controller/OrderController.php
+line: 51
+code: 0
+dateTime:2024/10/15 14:36:21
+
+message: Call to a member function prepare() on null
+file: /var/www/html/src/Model/UserProduct.php
+line: 64
+code: 0
+dateTime:2024/10/15 14:54:46
+
+message: 
+file: /var/www/html/src/Controller/OrderController.php
+line: 51
+code: 0
+dateTime:2024/10/15 15:01:29
+
+message: Call to undefined method Controller\OrderController::getPdo()
+file: /var/www/html/src/Controller/OrderController.php
+line: 46
+code: 0
+dateTime:2024/10/15 15:06:27
+
+message: 
+file: /var/www/html/src/Controller/OrderController.php
+line: 51
+code: 0
+dateTime:2024/10/15 15:10:05
+
+message: 
+file: /var/www/html/src/Controller/OrderController.php
+line: 51
+code: 0
+dateTime:2024/10/15 15:10:41
+
