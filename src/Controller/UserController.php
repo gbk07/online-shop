@@ -2,6 +2,7 @@
 namespace Controller;
 
 use Model\User;
+use mysql_xdevapi\Exception;
 use PDO;
 use Request\LoginRequest;
 use Request\RegistrateRequest;

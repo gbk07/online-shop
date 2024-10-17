@@ -1,4 +1,5 @@
 <?php
+
 $autoloader = function (string $className){
     $modifiedClassName = str_replace('\\', '/', $className);
     $path = __DIR__ . "/../$modifiedClassName.php";

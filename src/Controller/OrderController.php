@@ -1,11 +1,15 @@
 <?php
 namespace Controller;
 use Model\Order;
+use Model\OrderProducts;
 use Model\UserProduct;
-use Model\Model;
 use Request\OrderRequest;
+use Service\LoggerService;
+use Throwable;
+use Model\Model;
 
-class OrderController extends Model
+
+class OrderController
 {
     public function orderPlacement()
     {
@@ -33,22 +37,30 @@ class OrderController extends Model
             $number = $request->getNumber();
             $address = $request->getAddress();
 
+            $userProductModel = new UserProduct();
+            $result = $userProductModel->getAllByUserId($userId);
+
             $orderModel = new Order();
-            $orderId = $orderModel->createOrder($name, $email, $number, $address);
+            $orderProductsModel = new OrderProducts();
 
-            $orderModel = new UserProduct();
-            $result = $orderModel->getAllByUserId($userId);
+            Model::getPdo()->beginTransaction();
+            try{
+                $orderId = $orderModel->createOrder($name, $email, $number, $address);
+                $orderProductsModel->addOrderProducts($orderId, $result);
+                $orderProductsModel->deleteUserProducts($userId);
 
-            foreach ($result as $userProduct) {
-                $stmt = $this->pdo->prepare("INSERT INTO orders_products (order_id, product_id, amount) VALUES (:orderId, :productId, :amount)");
-                $stmt->execute(['orderId' => $orderId, 'productId' => $userProduct->getProduct() , 'amount' => $userProduct->getAmount(),
-                ]);
+                Model::getPdo()->commit();
+
+                header('Location: /orderPlaced');
+            } catch (Throwable $exception) {
+
+                Model::getPdo()->rollBack();
+
+                $logger = new LoggerService();
+                $logger->error($exception);
+                http_response_code(500);
+                require_once './../View/500.php';
             }
-
-            $stmt = $this->pdo->prepare("DELETE FROM user_products WHERE user_id = :userId");
-            $stmt->execute(['userId' => $userId]);
-
-            header('Location: /orderPlaced');
         }
         require_once './../View/orderPlacement.php';
     }
