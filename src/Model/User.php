@@ -9,7 +9,7 @@ class User extends Model
     private string $email;
     private string $password;
 
-    public function getOneByEmail(string $email): ?self
+    public static function getOneByEmail(string $email): ?self
     {
         $stmt = self::getPdo()->prepare("SELECT * FROM users WHERE email = :email");
         $stmt->execute([':email' => $email]);
@@ -24,7 +24,23 @@ class User extends Model
         $obj->password = $result["password"];
         return $obj;
     }
-    public function create(string $name, string $email, string $psw)
+    public static function getOneById(int $id): ?self
+    {
+        $stmt = self::getPdo()->prepare("SELECT * FROM users WHERE id = :id");
+        $stmt->execute([':id' => $id]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($result === false) {
+            return null;
+        }
+        $obj = new self();
+        $obj->id = $result['id'];
+        $obj->name = $result["name"];
+        $obj->email = $result["email"];
+        $obj->password = $result["password"];
+        return $obj;
+    }
+
+    public static function create(string $name, string $email, string $psw)
     {
         $stmt = self::getPdo()->prepare("INSERT INTO users (name, email, password) VALUES (:name, :email, :psw)");
         $stmt->execute([':name' => $name, ':email' => $email, ':psw' => $psw]);

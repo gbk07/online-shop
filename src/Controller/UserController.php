@@ -2,13 +2,19 @@
 namespace Controller;
 
 use Model\User;
-use mysql_xdevapi\Exception;
-use PDO;
 use Request\LoginRequest;
 use Request\RegistrateRequest;
+use Service\Auth\AuthServiceInterface;
+use Service\Auth\AuthSessionService;
 
 class UserController
 {
+    private AuthServiceInterface $authService;
+    public function __construct(AuthServiceInterface $authService)
+    {
+        $this->authService = $authService;
+    }
+
     public function registrate (RegistrateRequest $request)
     {
         $errors = $request->validate();
@@ -41,19 +47,13 @@ class UserController
             $username = $request->getUsername();
             $password = $request->getPassword();
 
-            $userModel = new User();
-            $result = $userModel->getOneByEmail($username);
+            $result = $this->authService->login($username, $password);
 
-            if ($result === null) {
-                $errors['username'] = 'email or password is incorrect';
+            if ($result) {
+                header("Location: /catalog");
+
             } else {
-                if (password_verify($password, $result->getPassword())) {
-                    session_start();
-                    $_SESSION["logged_in_user_id"] = $result->getId();
-                    header("Location: /catalog");
-                } else {
-                    $errors['password'] = 'email or password is incorrect';
-                }
+                $errors['password'] = 'email or password is incorrect';
             }
             require_once './../View/get_login.php';
         }

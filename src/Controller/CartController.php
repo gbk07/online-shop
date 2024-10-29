@@ -4,77 +4,65 @@ use Model\UserProduct;
 use Model\Product;
 use Request\AddProductRequest;
 use Request\DeleteProductRequest;
+use Service\Auth\AuthServiceInterface;
+use Service\Auth\AuthSessionService;
+use Service\CartService;
 
 class CartController
 {
+    private CartService $cartService;
+    private AuthServiceInterface $authService;
+
+        public function __construct(CartService $cartService, AuthServiceInterface $authService)
+        {
+            $this->cartService = $cartService;
+            $this->authService = $authService;
+        }
 
     public function addProduct(AddProductRequest $request)
     {
-        session_start();
-        if (!isset($_SESSION['logged_in_user_id'])) {
+        if (!$this->authService->check()) {
             header('Location:/login');
         }
 
         $errors = $request->validate();
-        $userId = $_SESSION['logged_in_user_id'];
+        $userId = $this->authService->getCurrentUser()->getId();
 
         if (empty($errors)) {
             $productId = $request->getProductId();
             $amount = $request->getAmount();
-            $userProductModel = new UserProduct();
-            $result = $userProductModel->exists($productId, $userId);
-            if (empty($result)) {
-                $userProductModel->addProduct($userId, $productId, $amount);
-            } else {
-                $userProductModel->updateAmount($userId, $productId, $amount);
-            }
+
+            $this->cartService->addProduct($userId, $productId, $amount);
         }
 
         header ("Location:/catalog");
     }
     public function deleteProduct(DeleteProductRequest $request)
     {
-        session_start();
-        if (!isset($_SESSION['logged_in_user_id'])) {
+        if (!$this->authService->check()) {
             header('Location:/login');
         }
 
         $errors = $request->validate();
-        $userId = $_SESSION['logged_in_user_id'];
+        $userId = $this->authService->getCurrentUser()->getId();
 
         if (empty($errors)) {
             $productId = $request->getProductId();
             $amount = $request->getAmount();
-            $userProductModel = new UserProduct();
-            $userProductModel->deleteProduct($userId, $productId, $amount);
+            userProduct::deleteProduct($userId, $productId, $amount);
             }
 
         header ("Location:/catalog");
     }
     public function getCart()
     {
-        session_start();
-        if (!isset($_SESSION["logged_in_user_id"])) {
-            header("Location: /login");
+        if (!$this->authService->check()) {
+            header('Location:/login');
         }
 
-        $userId = $_SESSION['logged_in_user_id'];
-        $UserProductModel = new UserProduct();
-        $userProducts = $UserProductModel->getAllByUserId($userId);
-
+        $userId = $this->authService->getCurrentUser()->getId();
         $productModel = new Product();
-        $products = [];
-
-        foreach ($userProducts as $userProduct) {
-            $productId = $userProduct->getProduct();
-            $amount = $userProduct->getAmount();
-            $product = $productModel->getOneByProductId($productId);
-
-            if ($product) {
-                $product->setAmount($amount);
-                $products[] = $product;
-            }
-        }
+        $products = $productModel->getProductsByUserId($userId);
 
         require_once './../View/cart.php';
     }

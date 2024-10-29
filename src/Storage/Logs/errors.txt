@@ -106,3 +106,112 @@ line: 51
 code: 0
 dateTime:2024/10/15 15:10:41
 
+message: Model\UserProduct::exists(): Argument #2 ($userId) must be of type int, null given, called in /var/www/html/src/Service/CartService.php on line 17
+file: /var/www/html/src/Model/UserProduct.php
+line: 22
+code: 0
+dateTime:2024/10/18 17:31:42
+
+message: Model\User::getOneByEmail(): Argument #1 ($email) must be of type string, null given, called in /var/www/html/src/Service/AuthService.php on line 17
+file: /var/www/html/src/Model/User.php
+line: 12
+code: 0
+dateTime:2024/10/22 13:37:51
+
+message: Call to a member function getId() on null
+file: /var/www/html/src/Controller/CartController.php
+line: 29
+code: 0
+dateTime:2024/10/22 13:40:44
+
+message: Typed property Model\User::$id must not be accessed before initialization
+file: /var/www/html/src/Model/User.php
+line: 34
+code: 0
+dateTime:2024/10/22 13:45:41
+
+message: Typed property Model\User::$id must not be accessed before initialization
+file: /var/www/html/src/Model/User.php
+line: 34
+code: 0
+dateTime:2024/10/22 13:48:11
+
+message: Call to a member function getId() on null
+file: /var/www/html/src/Controller/CartController.php
+line: 29
+code: 0
+dateTime:2024/10/22 14:14:06
+
+message: Call to a member function getId() on null
+file: /var/www/html/src/Controller/CartController.php
+line: 29
+code: 0
+dateTime:2024/10/22 14:27:38
+
+message: Call to undefined method Model\UserProduct::deleteUserProducts()
+file: /var/www/html/src/Service/OrderService.php
+line: 38
+code: 0
+dateTime:2024/10/23 12:39:29
+
+message: 
+file: /var/www/html/src/Service/OrderService.php
+line: 39
+code: 0
+dateTime:2024/10/23 12:46:45
+
+message: SQLSTATE[23502]: Not null violation: 7 ERROR:  null value in column "user_id" violates not-null constraint
+DETAIL:  Failing row contains (50, gggg, gggg@gmail.com, 89996412284, 123123, null).
+file: /var/www/html/src/Model/Order.php
+line: 9
+code: 23502
+dateTime:2024/10/24 13:51:56
+
+message: Call to undefined method Controller\OrderController::myOrdersDetails()
+file: /var/www/html/src/App.php
+line: 107
+code: 0
+dateTime:2024/10/27 13:02:54
+
+message: Call to undefined method Controller\OrderController::myOrdersDetails()
+file: /var/www/html/src/App.php
+line: 107
+code: 0
+dateTime:2024/10/27 13:09:45
+
+message: Controller\OrderController::orderDetails(): Argument #1 ($order) must be of type Model\Order, Request\OrderDetailsRequest given, called in /var/www/html/src/App.php on line 107
+file: /var/www/html/src/Controller/OrderController.php
+line: 56
+code: 0
+dateTime:2024/10/27 13:12:09
+
+message: Call to undefined function myOrderDetails()
+file: /var/www/html/src/View/orderDetails.php
+line: 3
+code: 0
+dateTime:2024/10/27 13:26:21
+
+message: SQLSTATE[42703]: Undefined column: 7 ERROR:  column products.name does not exist
+LINE 2:         SELECT orders.id, products.name, orders.number, orde...
+                                  ^
+file: /var/www/html/src/Model/Order.php
+line: 35
+code: 42703
+dateTime:2024/10/27 14:35:50
+
+message: SQLSTATE[42703]: Undefined column: 7 ERROR:  column products.name does not exist
+LINE 4:     products.name AS product_name, 
+            ^
+file: /var/www/html/src/Model/Order.php
+line: 45
+code: 42703
+dateTime:2024/10/27 14:40:10
+
+message: SQLSTATE[42703]: Undefined column: 7 ERROR:  column products.name does not exist
+LINE 2:         SELECT orders.id, products.name, orders.number, orde...
+                                  ^
+file: /var/www/html/src/Model/Order.php
+line: 35
+code: 42703
+dateTime:2024/10/27 14:45:12
+

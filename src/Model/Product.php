@@ -11,7 +11,7 @@ class Product extends Model
     private string $image;
     private int $amount;
 
-    public function getAll(): ?array
+    public static function getAll(): ?array
     {
         $stmt = self::getPdo()->prepare("SELECT * FROM products");
         $stmt->execute();
@@ -32,7 +32,7 @@ class Product extends Model
         return $productsObj;
     }
 
-    public function getOneByProductId(int $productId): ?self
+    public static function getOneByProductId(int $productId): ?self
     {
         $pdo = new PDO('pgsql:host=db;port=5432;dbname=dbname', 'dbuser', 'dbpwd');
 
@@ -80,5 +80,31 @@ class Product extends Model
     public function getImage(): string
     {
         return $this->image;
+    }
+    public static function getProductsByUserId(int $userId): ?array
+    {
+        $stmt = self::getPdo()->prepare("SELECT products.*, user_products.amount FROM products 
+                                      INNER JOIN user_products ON user_products.product_id = products.id 
+                                      WHERE user_products.user_id = :user_id");
+        $stmt->execute(['user_id' => $userId]);
+        $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if ($products === false) {
+            return null;
+        }
+
+        $productsObj = [];
+        foreach ($products as $productData) {
+            $obj = new self();
+            $obj->id = $productData['id'];
+            $obj->name = $productData['product_name'];
+            $obj->category = $productData['product_category'];
+            $obj->price = $productData['price'];
+            $obj->image = $productData['product_image'];
+            $obj->amount = $productData['amount'];
+            $productsObj[] = $obj;
+        }
+
+        return $productsObj;
     }
 }
