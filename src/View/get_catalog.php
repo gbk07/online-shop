@@ -30,7 +30,12 @@
             </div>
         <?php endforeach; ?>
     </div>
+
+    <!-- Ссылка на корзину -->
     <a href="/cart" class="cart-link">Перейти в корзину</a>
+
+    <!-- Ссылка на заказы -->
+    <a href="/productOrders" class="orders-link">Мои заказы</a>
 </div>
 
 <style>
@@ -99,7 +104,7 @@
     .card-footer {
         font-weight: bold;
         font-size: 18px;
-        color: #28a745; /* Зеленый цвет для цены */
+        color: #28a745;
     }
 
     .quantity-container {
@@ -140,7 +145,7 @@
         transform: scale(0.95);
     }
 
-    .cart-link {
+    .cart-link, .orders-link {
         display: block;
         text-align: center;
         margin-top: 20px;
@@ -150,7 +155,7 @@
         transition: color 0.3s;
     }
 
-    .cart-link:hover {
+    .cart-link:hover, .orders-link:hover {
         color: #0056b3;
     }
 </style>

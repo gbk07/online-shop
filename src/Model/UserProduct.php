@@ -10,7 +10,7 @@ class UserProduct extends Model
 
 
 
-    public function getProductId(int $productId): array|false
+    public static function getProductId(int $productId): array|false
     {
         $stmt = self::getPdo()->prepare("SELECT * FROM products WHERE id = :id");
         $stmt->execute(['id' => $productId]);
@@ -19,7 +19,7 @@ class UserProduct extends Model
 
     }
 
-    public function exists(int $productId, int $userId): array|false
+    public static function exists(int $productId, int $userId): array|false
     {
         $stmt = self::getPdo()->prepare("SELECT * FROM user_products WHERE user_id = :user_id AND product_id = :product_id");
         $stmt->execute(['user_id' => $userId, 'product_id' => $productId]);
@@ -27,20 +27,20 @@ class UserProduct extends Model
         return $result;
 
     }
-    public function addProduct(int $userId, int $productId, int $amount)
+    public static function addProduct(int $userId, int $productId, int $amount)
     {
         $stmt = self::getPdo()->prepare("INSERT INTO user_products (user_id, product_id, amount) VALUES (:user_id, :product_id, :amount)");
         $stmt->execute(['user_id' => $userId, 'product_id' => $productId, 'amount' => $amount]);
     }
 
-    public function updateAmount(int $userId,int $productId, int $amount)
+    public static function updateAmount(int $userId,int $productId, int $amount)
     {
         $stmt = self::getPdo()->prepare("UPDATE user_products SET amount = amount + :amount WHERE user_id = :user_id  and product_id = :product_id");
         $stmt->execute(['amount' => $amount, 'user_id' => $userId, 'product_id' => $productId]);
 
     }
 
-    public function deleteProduct(int $userId, int $productId, int $amount)
+    public static function deleteProduct(int $userId, int $productId, int $amount)
     {
         $stmt = self::getPdo()->prepare("SELECT amount FROM user_products WHERE user_id = :user_id AND product_id = :product_id");
         $stmt->execute(['user_id' => $userId, 'product_id' => $productId]);
@@ -58,8 +58,13 @@ class UserProduct extends Model
             }
         }
     }
+    public static function deleteUserProducts($userId)
+    {
+        $stmt = self::getPdo()->prepare("DELETE FROM user_products WHERE user_id = :userId");
+        $stmt->execute(['userId' => $userId]);
+    }
 
-    public function getAllByUserId(int $userId): ?array
+    public static function getAllByUserId(int $userId): ?array
     {
         $stmt = self::getPdo()->prepare("SELECT * FROM user_products WHERE user_id = :user_id");
         $stmt->execute(['user_id' => $userId]);
@@ -96,4 +101,5 @@ class UserProduct extends Model
     {
         return $this->product;
     }
+
 }

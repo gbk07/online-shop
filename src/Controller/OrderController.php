@@ -1,16 +1,20 @@
 <?php
 namespace Controller;
 use Model\Order;
-use Model\OrderProducts;
-use Model\UserProduct;
 use Request\OrderRequest;
-use Service\LoggerService;
-use Throwable;
-use Model\Model;
+use Service\Auth\AuthServiceInterface;
+use Service\Auth\AuthSessionService;
+use Service\OrderService;
+use Request\OrderDetailsRequest;
 
 
 class OrderController
 {
+    private AuthServiceInterface $authService;
+    public function __construct(AuthServiceInterface $authService)
+    {
+        $this->authService = $authService;
+    }
     public function orderPlacement()
     {
         require_once './../View/orderPlacement.php';
@@ -23,12 +27,11 @@ class OrderController
 
     public function placeOrder(OrderRequest $request)
     {
-        session_start();
-        if (!isset($_SESSION['logged_in_user_id'])) {
-            header('Location: /login');
+        if (!$this->authService->check()) {
+            header('Location:/login');
         }
 
-        $userId = $_SESSION['logged_in_user_id'];
+        $userId = $this->authService->getCurrentUser()->getId();
         $errors = $request->validateOrder();
 
         if (empty($errors)) {
@@ -37,31 +40,55 @@ class OrderController
             $number = $request->getNumber();
             $address = $request->getAddress();
 
-            $userProductModel = new UserProduct();
-            $result = $userProductModel->getAllByUserId($userId);
+            $orderService = new OrderService();
+            $success = $orderService->create($userId, $name, $email, $number, $address);
 
-            $orderModel = new Order();
-            $orderProductsModel = new OrderProducts();
-
-            Model::getPdo()->beginTransaction();
-            try{
-                $orderId = $orderModel->createOrder($name, $email, $number, $address);
-                $orderProductsModel->addOrderProducts($orderId, $result);
-                $orderProductsModel->deleteUserProducts($userId);
-
-                Model::getPdo()->commit();
-
+            if ($success) {
                 header('Location: /orderPlaced');
-            } catch (Throwable $exception) {
-
-                Model::getPdo()->rollBack();
-
-                $logger = new LoggerService();
-                $logger->error($exception);
+            } else {
                 http_response_code(500);
                 require_once './../View/500.php';
             }
         }
+
         require_once './../View/orderPlacement.php';
     }
+
+    public function productOrders()
+    {
+        require_once './../View/productOrders.php';
+    }
+
+    public function getProductOrders()
+    {
+
+        if (!$this->authService->check()) {
+            header('Location: /login');
+            exit();
+        }
+
+        $userId = $this->authService->getCurrentUser()->getId();
+        $orderModel = new Order();
+        $orders = $orderModel->getOrdersByUserId($userId);
+
+        require_once './../View/productOrders.php';
+    }
+
+    public function myOrderDetails(OrderDetailsRequest $request)
+    {
+        if (!$this->authService->check()) {
+            header('Location:/login');
+        }
+        $userId = $this->authService->getCurrentUser()->getId();
+        $errors = $request->validateDetails();
+
+        if (empty($errors)) {
+            $orderId = $request->getOrderId();
+            $orderModel = new Order();
+            $orderDetails = $orderModel->getOrderDetails($orderId);
+        }
+
+        require_once './../View/orderDetails.php';
+    }
+
 }

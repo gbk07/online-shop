@@ -1,14 +1,24 @@
 <?php
 namespace Controller;
 use Model\Product;
+use Service\Auth\AuthServiceInterface;
+use Service\Auth\AuthSessionService;
+
 class ProductController
 {
+    private AuthServiceInterface $authService;
+    public function __construct(AuthServiceInterface $authService)
+    {
+        $this->authService = $authService;
+    }
+
     public function catalog()
     {
-        session_start();
-        if(!isset($_SESSION["logged_in_user_id"])){
-            header("Location: /login");
+
+        if (!$this->authService->check()) {
+            header('Location:/login');
         }
+
         $productModel = new Product();
 
         $products = $productModel->getAll();
